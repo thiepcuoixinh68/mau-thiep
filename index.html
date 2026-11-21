@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Catalog mẫu thiệp cưới</title>
+<meta name="description" content="Chọn mẫu thiệp cưới, nhập số lượng để xem giá và liên hệ Zalo.">
+<style>
+:root{--main:#e11d48;--soft:#fff1f3;--line:#f1dde1;--txt:#2a2023;--mut:#7a6a70}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Arial,sans-serif;color:var(--txt);background:#fff}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
+.logo{font-weight:800;color:var(--main);font-size:20px}
+.top a.z{background:var(--main);color:#fff;padding:8px 16px;border-radius:999px;font-size:14px}
+.hero{text-align:center;padding:36px 16px 10px;background:linear-gradient(#fff1f3,#fff)}
+.hero small{color:var(--main);font-weight:600}
+.hero h1{margin:8px 0;font-size:clamp(24px,4vw,38px)}
+.hero p{margin:0 auto;max-width:620px;color:var(--mut)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:18px 16px}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;font:inherit;cursor:pointer}
+.tabs button.on{background:var(--main);border-color:var(--main);color:#fff}
+#grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:1240px;margin:0 auto;padding:0 16px 40px}
+@media(min-width:700px){#grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:1000px){#grid{grid-template-columns:repeat(4,1fr)}}
+.card{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;transition:.2s}
+.card:hover{box-shadow:0 8px 24px rgba(225,29,72,.15);transform:translateY(-3px)}
+.imgbox{aspect-ratio:3/4;background:var(--soft);position:relative}
+.imgbox img{width:100%;height:100%;object-fit:cover;display:block}
+.badge{position:absolute;top:8px;left:8px;background:var(--main);color:#fff;font-size:11px;padding:3px 9px;border-radius:999px}
+.body{padding:12px}
+.name{font-weight:600;font-size:14.5px;line-height:1.35;min-height:38px}
+.price{color:var(--main);font-weight:700;margin-top:6px;font-size:14px}
+.more{display:block;text-align:center;background:var(--main);color:#fff;font-weight:600;font-size:14px;padding:10px;border-radius:10px;margin-top:12px;transition:.2s}
+.card:hover .more{background:#be123c}
+.box{background:#fff;border-radius:18px;max-width:880px;width:100%;max-height:94vh;overflow:auto;display:grid;grid-template-columns:1fr;position:relative}
+@media(min-width:760px){.box{grid-template-columns:1fr 1fr}}
+.box .pic{background:var(--soft)}
+.box .pic img{width:100%;display:block}
+.box .det{padding:24px;display:flex;flex-direction:column;gap:12px}
+.box h2{margin:0;font-size:22px}
+.x{position:absolute;right:12px;top:8px;border:0;background:#fff;border-radius:50%;width:34px;height:34px;font-size:20px;cursor:pointer;z-index:2}
+.qrow{display:flex;align-items:center;gap:10px}
+.qrow input{width:110px;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.zbtn{background:#0068ff;color:#fff;border:0;border-radius:12px;padding:14px;font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+.note{font-size:12.5px;color:var(--mut)}
+footer{background:var(--soft);text-align:center;padding:26px 16px;color:var(--mut);font-size:14px}
+</style>
+</head>
+<body>
+<div class="top"><div class="logo" id="shop"></div><a class="z" id="topz" target="_blank">Chat Zalo</a></div>
+<section class="hero">
+  <small>🏮 Thiệp cưới in giấy</small>
+  <h1>Catalog mẫu thiệp in giấy mỹ thuật</h1>
+  <p>Chọn mẫu bạn thích, nhập số lượng rồi liên hệ Zalo để được tư vấn và báo giá.</p>
+</section>
+<div class="tabs" id="tabs"></div>
+<div id="grid"></div>
+<footer id="foot"></footer>
+
+<script src="data.js"></script>
+<script>
+const $=s=>document.querySelector(s), fmt=n=>n.toLocaleString("vi-VN");
+let tag="Tất cả", cur=null;
+setLogo(); document.title="Catalog mẫu thiệp · "+SHOP.name;
+$("#topz").href="https://zalo.me/"+SHOP.zalo;
+$("#foot").innerHTML=`<b>${SHOP.name}</b><br>📞 ${SHOP.phone} · 📍 ${SHOP.address}`;
+
+function tabs(){
+  const o=SHOP.tagOrder||[], rk=x=>o.indexOf(x)<0?999:o.indexOf(x);
+  const t=["Tất cả",...[...new Set(TEMPLATES.map(x=>x.tag).filter(Boolean))].sort((a,b)=>rk(a)-rk(b))];
+  $("#tabs").innerHTML="";
+  t.forEach(n=>{const b=document.createElement("button");b.textContent=n;b.className=n===tag?"on":"";
+    b.onclick=()=>{tag=n;tabs();grid()};$("#tabs").appendChild(b)});
+}
+function grid(){
+  $("#grid").innerHTML="";
+  TEMPLATES.filter(t=>tag==="Tất cả"||t.tag===tag).forEach(t=>{
+    const c=document.createElement("div");c.className="card";
+    c.innerHTML=`<div class="imgbox"><img loading="lazy" src="${t.img}" alt="${t.name}" onerror="this.style.display='none'">${t.tag?`<span class="badge">${t.tag}</span>`:""}</div>
+      <div class="body"><div class="name">${t.name}</div>
+      <div class="price">Chỉ từ ${money(fromPrice(t))}đ / thiệp</div>
+      <div class="more">Xem chi tiết →</div></div>`;
+    c.onclick=()=>location.href="mau.html?id="+encodeURIComponent(t.id);$("#grid").appendChild(c);
+  });
+}
+tabs();grid();
+</script>
+</body>
+</html>

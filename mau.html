@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chi tiết mẫu thiệp</title>
+<style>
+:root{--main:#e11d48;--soft:#fff1f3;--line:#f1dde1;--txt:#2a2023;--mut:#7a6a70}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Arial,sans-serif;color:var(--txt);background:#fff}
+a{color:inherit;text-decoration:none}
+.top{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
+.logo{font-weight:800;color:var(--main);font-size:20px}
+.top a.z{background:var(--main);color:#fff;padding:8px 16px;border-radius:999px;font-size:14px}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+.crumb{font-size:14px;color:var(--mut);margin:6px 0 16px}
+.crumb a{color:var(--main)}
+.main{display:grid;grid-template-columns:1fr;gap:24px}
+@media(min-width:820px){.main{grid-template-columns:1fr 1fr}}
+.pic{background:var(--soft);border-radius:18px;overflow:hidden}
+.pic img{width:100%;display:block}
+.tag{display:inline-block;background:var(--soft);color:var(--main);font-size:13px;padding:4px 12px;border-radius:999px;font-weight:600}
+h1{margin:10px 0 6px;font-size:clamp(24px,3.4vw,34px)}
+.price{color:var(--main);font-size:26px;font-weight:800}
+.desc{color:var(--mut);margin:10px 0 16px}
+.qrow{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.qrow input{width:110px;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btns a{flex:1;min-width:150px;text-align:center;padding:14px;border-radius:12px;font-weight:700}
+.call{background:#fff;border:2px solid var(--main);color:var(--main)}
+.zl{background:#0068ff;color:#fff}
+.perks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.perk{background:var(--soft);border-radius:12px;text-align:center;padding:12px 6px;font-size:13px}
+.perk b{display:block;font-size:22px;margin-bottom:4px}
+h2{margin:36px 0 12px;font-size:22px}
+.det img{width:100%;border-radius:14px;display:block;margin-bottom:12px}
+.rel{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(min-width:700px){.rel{grid-template-columns:repeat(3,1fr)}}
+.card{border:1px solid var(--line);border-radius:16px;overflow:hidden;display:block}
+.card .ib{aspect-ratio:3/4;background:var(--soft)}
+.card img{width:100%;height:100%;object-fit:cover;display:block}
+.card .b{padding:12px;font-size:14px}
+.card .p{color:var(--main);font-weight:700;margin-top:4px}
+.back{display:inline-block;margin:24px 0;color:var(--main);font-weight:600}
+.tier{width:100%;border-collapse:collapse;margin:0 0 14px;font-size:14px}.tier td{padding:8px 10px;border-bottom:1px solid var(--line)}.tier td:last-child{text-align:right;color:var(--main)}
+.calc{background:var(--soft);border-radius:12px;padding:12px 14px;margin-bottom:14px;line-height:1.6}.calc b{color:var(--main)}.warn{color:#b45309}
+.txt{font-size:16px;line-height:1.7;margin-bottom:18px}.txt p{margin:0 0 10px}.txt ul{margin:0 0 12px;padding-left:22px}.txt li{margin-bottom:4px}
+.pq{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}.pq label{display:block;font-size:13px;color:var(--mut);margin-bottom:4px}.pq select,.pq input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff}
+footer{background:var(--soft);text-align:center;padding:26px 16px;color:var(--mut);font-size:14px}
+</style>
+</head>
+<body>
+<div class="top"><a class="logo" id="shop" href="index.html"></a><a class="z" id="topz" target="_blank">Chat Zalo</a></div>
+<div class="wrap" id="app"></div>
+<footer id="foot"></footer>
+<script src="data.js"></script>
+<script>
+const $=s=>document.querySelector(s), fmt=n=>n.toLocaleString("vi-VN");
+setLogo();
+$("#topz").href="https://zalo.me/"+SHOP.zalo;
+$("#foot").innerHTML=`<b>${SHOP.name}</b><br>📞 ${SHOP.phone} · 📍 ${SHOP.address}`;
+const id=new URLSearchParams(location.search).get("id");
+const t=TEMPLATES.find(x=>x.id===id);
+const app=$("#app");
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const detailHTML=t=>{
+  if(!t.detail) return "";
+  const L=(Array.isArray(t.detail)?t.detail:String(t.detail).split("\n")).map(s=>s.trim()).filter(Boolean);
+  let out="",ul=[]; const flush=()=>{if(ul.length){out+="<ul>"+ul.join("")+"</ul>";ul=[]}};
+  L.forEach(s=>{ if(/^[-•]\s/.test(s)) ul.push("<li>"+esc(s.slice(2))+"</li>"); else {flush();out+="<p>"+esc(s)+"</p>"} });
+  flush(); return `<div class="txt">${out}</div>`;
+};
+if(!t){
+  app.innerHTML='<p>Không tìm thấy mẫu này.</p><a class="back" href="index.html">← Xem tất cả mẫu thiệp</a>';
+}else{
+  document.title=t.name+" · "+SHOP.name;
+  const P=papersOf(t);
+  const imgs=t.imgs&&t.imgs.length?t.imgs:[t.img];
+  const others=TEMPLATES.filter(x=>x.id!==t.id);
+  const rel=[...others.filter(x=>x.tag===t.tag),...others.filter(x=>x.tag!==t.tag)].slice(0,3);
+  app.innerHTML=`
+  <div class="crumb"><a href="index.html">Mẫu thiệp in</a> › ${t.name}</div>
+  <div class="main">
+    <div class="pic"><img src="${t.img}" alt="${t.name}"></div>
+    <div>
+      ${t.tag?`<span class="tag">${t.tag}</span>`:""}
+      <h1>${t.name}</h1>
+      <div class="price">Chỉ từ ${money(fromPrice(t))}đ / thiệp</div>
+      <div class="desc">${t.desc||SHOP.defaultDesc}</div>
+      <div id="tierbox"></div>
+      <div class="pq">
+        ${P.length>1?`<div><label for="pp">Loại giấy</label><select id="pp">${P.map((p,i)=>`<option value="${i}">${esc(p.name)}</option>`).join("")}</select></div>`:""}
+        <div><label for="q">Số lượng thiệp</label><input id="q" type="number" min="1" value="${Math.max(SHOP.defaultQty,minQty(t))}"></div>
+      </div>
+      <div id="calc" class="calc"></div>
+      <div class="btns">
+        <a class="call" href="tel:${SHOP.phone}">📞 Liên hệ tư vấn</a>
+        <a class="zl" id="zl" target="_blank">💬 Chat Zalo</a>
+      </div>
+      <div class="perks">${SHOP.perks.map(p=>`<div class="perk"><b>${p[0]}</b>${p[1]}</div>`).join("")}</div>
+    </div>
+  </div>
+  <h2>Chi tiết mẫu</h2>
+  ${detailHTML(t)}
+  <div class="det">${imgs.map(s=>`<img loading="lazy" src="${s}" alt="${t.name}">`).join("")}</div>
+  <h2>Mẫu khác có thể bạn thích</h2>
+  <div class="rel">${rel.map(r=>`<a class="card" href="mau.html?id=${encodeURIComponent(r.id)}"><div class="ib"><img loading="lazy" src="${r.img}" alt="${r.name}"></div><div class="b">${r.name}<div class="p">Chỉ từ ${money(fromPrice(r))}đ / thiệp</div></div></a>`).join("")}</div>
+  <a class="back" href="index.html">← Xem tất cả mẫu thiệp</a>`;
+  const zl=$("#zl"), q=$("#q"), pp=$("#pp"), calc=$("#calc");
+  const setZ=()=>{
+    const pi=pp?+pp.value:0, pa=P[pi], n=Math.max(1,+q.value||1), p=priceFor(t,n,pi), mq=pa.tiers[0][0];
+    $("#tierbox").innerHTML=`<table class="tier">${tierRows(t,pi).map(r=>`<tr><td>${r[0]}</td><td><b>${money(r[1])}đ</b> / thiệp</td></tr>`).join("")}</table>`;
+    const gn=P.length>1?` (${pa.name})`:"";
+    let msg;
+    if(p===null){
+      calc.innerHTML=`<span class="warn">Số lượng tối thiểu${P.length>1?" của "+esc(pa.name):""} là ${money(mq)} thiệp.</span>`;
+      msg=`Xin chào, tôi quan tâm mẫu thiệp ${t.name} (mã ${t.id})${gn}, muốn được tư vấn.`;
+    }else{
+      calc.innerHTML=(P.length>1?`Loại giấy: <b>${esc(pa.name)}</b><br>`:"")+`Đơn giá: <b>${money(p)}đ</b> / thiệp<br>Tạm tính: <b>${money(p*n)}đ</b> (${money(n)} thiệp)`;
+      msg=`Xin chào, tôi quan tâm mẫu thiệp ${t.name} (mã ${t.id}), ${P.length>1?"loại "+pa.name+", ":""}số lượng ${money(n)} thiệp, đơn giá ${money(p)}đ, tạm tính ${money(p*n)}đ. Shop tư vấn giúp tôi nhé.`;
+    }
+    zl.href="https://zalo.me/"+SHOP.zalo+"?text="+encodeURIComponent(msg);
+  };
+  q.oninput=setZ; if(pp) pp.onchange=setZ; setZ();
+}
+</script>
+</body>
+</html>
