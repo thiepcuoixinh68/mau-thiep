@@ -4,7 +4,8 @@ const SHOP = {
   zalo: "0985718237",            // số Zalo
   phone: "0985718237",
   address: "Số 3, ngách 76, ngõ 29 Phố Trạm, Long Biên, Hà Nội",
-  logo: "images/avatar-linh-anh.png",                      // logo: bỏ file vào images/ rồi ghi đường dẫn, ví dụ "images/logo.png". Để "" thì hiện chữ tên cửa hàng
+  logo: "images/avatar-linh-anh.png",// logo: bỏ file vào images/ rồi ghi đường dẫn, ví dụ "images/logo.png". Để "" thì hiện chữ tên cửa hàng
+  showName: true,
   tagOrder: ["Hồng","Xanh dương","Xanh lá","Hoa dại","Kem","Thiệp HD","Thiệp HT","Thiệp TP","Thiêp TV"],  // thứ tự các nhóm ở nút lọc. Đổi chữ ở đây VÀ ở dòng mẫu để đổi tên nhóm
   // LOẠI GIẤY và BẢNG GIÁ CHUNG theo số lượng. Mỗi mức: [từ bao nhiêu thiệp trở lên, giá 1 thiệp]
   // (các mức giá dưới đây là SỐ MẪU để chạy thử, hãy thay bằng giá thật của bạn)
