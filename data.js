@@ -59,8 +59,12 @@ function tierRows(t,pi){          // dòng hiển thị bảng giá của loại
   return a.map((x,i)=>[ i<a.length-1 ? x[0]+" – "+(a[i+1][0]-1)+" thiệp" : "Từ "+x[0]+" thiệp trở lên", x[1] ]);
 }
 function setLogo(){
-  const e=document.querySelector("#shop");
-  if(SHOP.logo){ const i=new Image(); i.src=SHOP.logo; i.alt=SHOP.name; i.style.height="38px"; i.style.display="block";
-    i.onerror=()=>{e.textContent=SHOP.name}; e.textContent=""; e.appendChild(i); }
-  else e.textContent=SHOP.name;
+  const e=document.querySelector("#shop"); e.textContent="";
+  e.style.display="flex"; e.style.alignItems="center"; e.style.gap="10px";
+  if(SHOP.logo){
+    const i=new Image(); i.src=SHOP.logo; i.alt=SHOP.name; i.style.height="38px"; i.style.display="block";
+    i.onerror=()=>{ i.remove(); if(!SHOP.showName) e.textContent=SHOP.name; };
+    e.appendChild(i);
+    if(SHOP.showName){ const s=document.createElement("span"); s.textContent=SHOP.name; e.appendChild(s); }
+  } else e.textContent=SHOP.name;
 }
